@@ -33,9 +33,25 @@
 // ### Gợi ý:
 // Bạn có thể sử dụng vòng lặp để kiểm tra số đó có chia hết cho bất kỳ số nào từ 2 đến căn bậc hai của số đó hay không. Nếu có, thì đó không phải là số nguyên tố.
 
+function isPrime(num) {
+    var flag = true;
+    if (!Number.isInteger(num) && num <= 0) flag = false;
+    if(num > 3){
+        for(var i = 2; i <= Math.sqrt(num); i++){
+            if(num % i === 0){
+                flag = false; break;
+            }
+        }
+    }
+    return flag;
+}
 
-
-
+var number = 1119
+if(!isPrime(number)){
+    console.log(`Số đầu vào: ${number}. Số này không phải là số nguyên tố`)
+}else {
+    console.log(`Số đầu vào: ${number}. Số này là số nguyên tố`);
+}
 
 // # Playwright
 // ## Đề bài
@@ -49,3 +65,47 @@
 // - Kiểm số lượng sản phẩm đúng.
 // - (Nâng cao) Kiểm tra tổng tiền sản phẩm đúng (tổng tiền = tổng (số lượng * đơn giá))
 
+const {test, expect} = require('@playwright/test');
+const pageMaterial = 'https://material.playwrightvn.com/';
+const products = [
+    {
+        id: 1,
+        productName: 'Product 1',
+        price: 10.00,
+        numPurchase: 2
+    },
+    {
+        id: 2,
+        productName: 'Product 2',
+        price: 20.00,
+        numPurchase: 3
+    },
+    {
+        id: 3,
+        productName: 'Product 3',
+        price: 30.00,
+        numPurchase: 4
+    }
+];
+
+test('Challenge 17-09-2024', async ({page}) => {
+    await test.step('Go to page material', async () => {
+        await page.goto(pageMaterial);
+    })
+    await test.step('Click session 2: Product Page', async () => {
+        await page.locator("//a[contains(text(),'Bài học 2: Product page')]").click();
+    })
+    await test.step('Add products to card', async () => {
+        for (let i = 0; i < products.length; i++) {
+            await page.locator("//button[@data-product-id='"+products[i].id+"']").click({clickCount: products[i].numPurchase});  
+        }
+    })
+    await test.step('Check total amount need to pay', async () => {
+        let totalAmount = 0;
+        for (let i = 0; i < products.length; i++) {
+            totalAmount = totalAmount + products[i].price*products[i].numPurchase;
+            
+        }
+        
+    })
+})

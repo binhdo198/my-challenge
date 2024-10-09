@@ -54,7 +54,7 @@ const account = {
 }
 
 
-test('Challenge 14-09-2024', async ({ page }) => {
+test('Challenge 16-09-2024', async ({ page }) => {
     await test.step('Go to page material', async () => {
         await page.goto('https://material.playwrightvn.com/');
     });
