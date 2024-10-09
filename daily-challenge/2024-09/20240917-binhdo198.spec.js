@@ -33,9 +33,25 @@
 // ### Gợi ý:
 // Bạn có thể sử dụng vòng lặp để kiểm tra số đó có chia hết cho bất kỳ số nào từ 2 đến căn bậc hai của số đó hay không. Nếu có, thì đó không phải là số nguyên tố.
 
+function isPrime(num) {
+    var flag = true;
+    if (!Number.isInteger(num) && num <= 0) flag = false;
+    if(num > 3){
+        for(var i = 2; i <= Math.sqrt(num); i++){
+            if(num % i === 0){
+                flag = false; break;
+            }
+        }
+    }
+    return flag;
+}
 
-
-
+var number = 1119
+if(!isPrime(number)){
+    console.log(`Số đầu vào: ${number}. Số này không phải là số nguyên tố`)
+}else {
+    console.log(`Số đầu vào: ${number}. Số này là số nguyên tố`);
+}
 
 // # Playwright
 // ## Đề bài
