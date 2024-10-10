@@ -108,23 +108,28 @@ test('Challenge 17-09-2024', async ({ page }) => {
 
         }
         //Check tổng số loại sản phẩm được add vào giỏ hàng
-        const numRow = await page.locator("//tbody/tr");
-        await expect(numRow).toHaveCount(products.length);
+        const numRow = page.locator("//tbody/tr");
+        expect(numRow).toHaveCount(products.length);
 
         const numRow1 = (await page.locator("//tbody/tr").all()).length;
-        await expect(numRow1).toEqual(products.length);
+        expect(numRow1).toEqual(products.length);
 
         //Check từng dòng sản phẩm được add vào giỏ hàng
         for (let i = 0; i < numRow1; i++) {
             const proName = await page.locator(`//tbody/tr[${i + 1}]/td[1]`).innerText();
-            const proPrice = await page.locator(`//tbody/tr[${i + 1}]/td[2]`).innerText();
-            const proQuantity = await page.locator(`//tbody/tr[${i + 1}]/td[3]`).innerText();
-            const proAmount = await page.locator(`//tbody/tr[${i + 1}]/td[4]`).innerText();
-            await expect(proName).toEqual(products[i].productName);
-            // await expect(proPrice).toEqual(products[i].price.toFixed(2));
+            const proPrice = Number((await page.locator(`//tbody/tr[${i + 1}]/td[2]`).innerText()).replace("$",""));
+            const proQuantity = Number(await page.locator(`//tbody/tr[${i + 1}]/td[3]`).innerText());
+            const proAmount = Number((await page.locator(`//tbody/tr[${i + 1}]/td[4]`).innerText()).replace("$",""));
+            expect(proName).toEqual(products[i].productName);
+            expect(proPrice).toEqual(products[i].price);
+            expect(proQuantity).toEqual(products[i].numPurchase);
+            expect(proAmount).toEqual(products[i].price*products[i].numPurchase);
             console.log(proName, proPrice, proQuantity, proAmount);
         }
 
+        //Check tổng tiền phải trả của giỏ hàng
+        expect(Number((await page.locator("//td[@class='total-price']").innerText()).replace("$",""))).toEqual(totalAmount);
+        
     })
 
 })
