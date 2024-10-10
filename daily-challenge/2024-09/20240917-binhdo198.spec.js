@@ -66,6 +66,7 @@ if(!isPrime(number)){
 // - (Nâng cao) Kiểm tra tổng tiền sản phẩm đúng (tổng tiền = tổng (số lượng * đơn giá))
 
 const {test, expect} = require('@playwright/test');
+const { log } = require('console');
 const pageMaterial = 'https://material.playwrightvn.com/';
 const products = [
     {
@@ -88,7 +89,7 @@ const products = [
     }
 ];
 
-test('Challenge 17-09-2024', async ({page}) => {
+test('Challenge 17-09-2024', async ({ page }) => {
     await test.step('Go to page material', async () => {
         await page.goto(pageMaterial);
     })
@@ -97,15 +98,33 @@ test('Challenge 17-09-2024', async ({page}) => {
     })
     await test.step('Add products to card', async () => {
         for (let i = 0; i < products.length; i++) {
-            await page.locator("//button[@data-product-id='"+products[i].id+"']").click({clickCount: products[i].numPurchase});  
+            await page.locator("//button[@data-product-id='" + products[i].id + "']").click({ clickCount: products[i].numPurchase });
         }
     })
     await test.step('Check total amount need to pay', async () => {
         let totalAmount = 0;
         for (let i = 0; i < products.length; i++) {
-            totalAmount = totalAmount + products[i].price*products[i].numPurchase;
-            
+            totalAmount = totalAmount + products[i].price * products[i].numPurchase;
+
         }
-        
+        //Check tổng số loại sản phẩm được add vào giỏ hàng
+        const numRow = await page.locator("//tbody/tr");
+        await expect(numRow).toHaveCount(products.length);
+
+        const numRow1 = (await page.locator("//tbody/tr").all()).length;
+        await expect(numRow1).toEqual(products.length);
+
+        //Check từng dòng sản phẩm được add vào giỏ hàng
+        for (let i = 0; i < numRow1; i++) {
+            const proName = await page.locator(`//tbody/tr[${i + 1}]/td[1]`).innerText();
+            const proPrice = await page.locator(`//tbody/tr[${i + 1}]/td[2]`).innerText();
+            const proQuantity = await page.locator(`//tbody/tr[${i + 1}]/td[3]`).innerText();
+            const proAmount = await page.locator(`//tbody/tr[${i + 1}]/td[4]`).innerText();
+            await expect(proName).toEqual(products[i].productName);
+            // await expect(proPrice).toEqual(products[i].price.toFixed(2));
+            console.log(proName, proPrice, proQuantity, proAmount);
+        }
+
     })
+
 })
