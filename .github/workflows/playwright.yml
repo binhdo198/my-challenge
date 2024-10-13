@@ -25,7 +25,7 @@ jobs:
       env:
         GG_CHAT_WEBHOOK_URL: ${{ secrets.GG_CHAT_WEBHOOK_URL }}  # Lưu URL trong Secrets
       run: |
-        if [ ${{ job.status }} == 'success' ]; then
+        if [ '${{ job.status }}' = 'success' ]; then
           STATUS="Run job success! 🎉"
         else
           STATUS="Run job failed! ❌"
