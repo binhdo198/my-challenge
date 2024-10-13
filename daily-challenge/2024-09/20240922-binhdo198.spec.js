@@ -41,7 +41,7 @@
 // ```
 
 function countWords(inputStr){
-    str = inputStr.replace(/[.,!]/g,"").trim().split(/\s+/);
+    let str = inputStr.replace(/[.,!]/g,"").trim().split(/\s+/);
     return str.length;
 }
 const inputString = "   Hôm nay là chủ nhật. Yeah, yeah , yeah!!! Yeahhh !!! ";
