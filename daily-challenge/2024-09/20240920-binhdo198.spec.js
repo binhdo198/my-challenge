@@ -61,3 +61,32 @@ console.log(findLargestNumber(arr));
 // - Kiểm tra: số lần nhân = 3, loại nhấn: đúp, phím kèm theo: không có
 // - Giữ shift và click vào ô: "Nhấn hoặc nhấn đúp vào đây!"
 // - Kiểm tra: số lần nhấn = 4, loại nhấn: đơn, phím kèm theo: Shift
+
+const {test, expect} = require('@playwright/test');
+
+test('Challenge 20-09-2024', async ({page}) => {
+    await test.step('Go to material page', async () => {
+        await page.goto('https://material.playwrightvn.com/');
+    })
+    await test.step('Click session 5: Mouse event', async () => {
+        await page.locator("//a[contains(text(),'Bài học 5: Xử lý mouse event')]").click();
+    })
+    await test.step('Click button and verify type of click', async () => {
+        await page.locator("//div[@id='clickArea']").click();
+        await expect(page.locator("//p[@id='clickCount']")).toContainText("1");
+        await expect(page.locator("//p[@id='clickType']")).toContainText("Đơn");
+        await expect(page.locator("//p[@id='modifierKeys']")).toContainText("Không có");
+    })
+    await test.step('Double click and verify type of click', async () => {
+        await page.locator("//div[@id='clickArea']").dblclick();
+        await expect(page.locator("//p[@id='clickCount']")).toContainText("3");
+        await expect(page.locator("//p[@id='clickType']")).toContainText("Đúp");
+        await expect(page.locator("//p[@id='modifierKeys']")).toContainText("Không có");
+    })
+    await test.step('Shift + click and verify type of click', async () => {
+        await page.locator("//div[@id='clickArea']").click({modifiers: ["Shift"]});
+        await expect(page.locator("//p[@id='clickCount']")).toContainText("4");
+        await expect(page.locator("//p[@id='clickType']")).toContainText("Đơn");
+        await expect(page.locator("//p[@id='modifierKeys']")).toContainText("Shift");
+    })
+})
